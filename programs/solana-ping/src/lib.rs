@@ -4,17 +4,15 @@ declare_id!("FA51D5fh1VhruC5ZhG2MVvRjfS233QnSD5yEPCbYFd3U");
 
 #[program]
 pub mod solana_ping {
-    use anchor_lang::solana_program::entrypoint::ProgramResult;
-
     use super::*;
 
-    pub fn initialize(ctx: Context<Initialize>) -> ProgramResult {
+    pub fn initialize(ctx: Context<Initialize>) -> Result<()> {
         let base_account = &mut ctx.accounts.base_account;
         base_account.count = 0;
         Ok(())
     }
 
-    pub fn increment(ctx: Context<Increment>) -> ProgramResult {
+    pub fn increment(ctx: Context<Increment>) -> Result<()> {
         let base_account = &mut ctx.accounts.base_account;
         base_account.count += 1;
         Ok(())

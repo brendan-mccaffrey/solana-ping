@@ -1,5 +1,5 @@
 import * as anchor from "@project-serum/anchor";
-import { Program } from "@project-serum/anchor";
+// import { Program } from "@project-serum/anchor";
 import assert = require("assert");
 import { createFreezeAccountInstruction } from "@solana/spl-token";
 import { SolanaPing } from "../target/types/solana_ping";
