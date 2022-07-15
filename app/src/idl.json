@@ -1,0 +1,55 @@
+{
+    "version": "0.1.0",
+    "name": "solana_ping",
+    "instructions": [
+        {
+            "name": "initialize",
+            "accounts": [
+                {
+                    "name": "baseAccount",
+                    "isMut": true,
+                    "isSigner": true
+                },
+                {
+                    "name": "user",
+                    "isMut": true,
+                    "isSigner": true
+                },
+                {
+                    "name": "systemProgram",
+                    "isMut": false,
+                    "isSigner": false
+                }
+            ],
+            "args": []
+        },
+        {
+            "name": "increment",
+            "accounts": [
+                {
+                    "name": "baseAccount",
+                    "isMut": true,
+                    "isSigner": false
+                }
+            ],
+            "args": []
+        }
+    ],
+    "accounts": [
+        {
+            "name": "BaseAccount",
+            "type": {
+                "kind": "struct",
+                "fields": [
+                    {
+                        "name": "count",
+                        "type": "u64"
+                    }
+                ]
+            }
+        }
+    ],
+    "metadata": {
+        "address": "FA51D5fh1VhruC5ZhG2MVvRjfS233QnSD5yEPCbYFd3U"
+    }
+}
