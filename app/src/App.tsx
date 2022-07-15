@@ -1,7 +1,7 @@
 import { createDefaultAuthorizationResultCache, SolanaMobileWalletAdapter } from '@solana-mobile/wallet-adapter-mobile';
 import { WalletAdapterNetwork } from '@solana/wallet-adapter-base';
-import { ConnectionProvider, useAnchorWallet, WalletProvider } from '@solana/wallet-adapter-react';
-import { WalletModalProvider, WalletMultiButton } from '@solana/wallet-adapter-react-ui';
+import { ConnectionProvider, useAnchorWallet, WalletProvider, useWallet } from '@solana/wallet-adapter-react';
+import { useWalletModal, WalletModalProvider, WalletMultiButton } from '@solana/wallet-adapter-react-ui';
 import {
     GlowWalletAdapter,
     PhantomWalletAdapter,
@@ -16,9 +16,10 @@ import {
     BN
 } from '@project-serum/anchor';
 import { clusterApiUrl, Connection } from '@solana/web3.js';
-import React, { FC, ReactNode, useMemo } from 'react';
+import React, { FC, ReactNode, useMemo, useState } from 'react';
 import idl from './idl.json';
 import { Transaction } from '@solana/web3.js';
+import { PublicKey } from '@solana/web3.js';
 
 require('./App.css');
 require('@solana/wallet-adapter-react-ui/styles.css');
@@ -67,30 +68,45 @@ const Context: FC<{ children: ReactNode }> = ({ children }) => {
 };
 
 const Content: FC = () => {
-    const wallet = useAnchorWallet();
 
-    function getProvider() {
-        if (!wallet) {
-            return null;
-        }
+    // WalletProvider.
 
-        const network = "https://127.0.0.1:8899";
-        const connection = new Connection(network, "processed");
+    // let[wallet, setWallet] = useState("9m5kFDqgpf7Ckzbox91RYcADqcmvxW4MmuNvroD5H2r9");
 
-        const provider = new AnchorProvider(connection, wallet, { "preflightCommitment": "processed" });
+    const anchorWallet = useAnchorWallet();
 
-        return provider
+    const { publicKey, sendTransaction, wallet } = useWallet();
+
+
+    // const wallet = walletContext.wallet
+
+
+    // function getProvider() {
+    if (!anchorWallet || !wallet) {
+        console.log("WALLET")
+        return null;
     }
+
+    const network = "https://127.0.0.1:8899";
+    const connection = new Connection(network, "processed");
+
+    //     const modal = useWalletModal()
+
+    const provider = new AnchorProvider(connection, anchorWallet, { "preflightCommitment": "processed" });
+    //     // const provider = new Provider(connection, wallet, { "preflightCommitment": "processed" });
+
+    //     return provider
+    // }
 
     async function createCounter() {
         const baseAccount = web3.Keypair.generate();
-        const provider = getProvider();
-        if (!provider) {
-            throw ("Provider is null")
-        }
+        // const provider = getProvider();
+        // if (!provider) {
+        //     throw ("Provider is null")
+        // }
 
         const a = JSON.parse(JSON.stringify(idl));
-        const program = new Program(a, idl.metadata.address, provider);
+        const program = new Program(a, idl.metadata.address);
 
         if (!program) {
             console.log("AHHHHHHH")
@@ -109,7 +125,7 @@ const Content: FC = () => {
             //         }
             //     })
             // );
-            // const tx = new Transaction()
+
 
             console.log(idl.metadata.address)
 
@@ -118,11 +134,19 @@ const Content: FC = () => {
             const tx = await program.methods.initialize({
                 accounts: {
                     baseAccount: baseAccount.publicKey,
-                    user: provider.wallet.publicKey,
+                    user: publicKey,
                     systemProgram: web3.SystemProgram.programId,
                 },
                 signer: [baseAccount]
-            }).rpc();
+            }).transaction();
+
+            const transaction = new Transaction().add(
+                tx
+            )
+
+            await sendTransaction(transaction, connection)
+
+            // await provider.connection.confirmTransaction(signature, 'processed');
 
             if (!tx) {
                 console.log("SHIT")
