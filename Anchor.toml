@@ -1,14 +1,14 @@
 [features]
 seeds = false
 skip-lint = false
-[programs.localnet]
+[programs.devnet]
 solana_ping = "FA51D5fh1VhruC5ZhG2MVvRjfS233QnSD5yEPCbYFd3U"
 
 [registry]
 url = "https://api.apr.dev"
 
 [provider]
-cluster = "localnet"
+cluster = "devnet"
 wallet = "/Users/brendanmccaffrey/.config/solana/id.json"
 
 [scripts]

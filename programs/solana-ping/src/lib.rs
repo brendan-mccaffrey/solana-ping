@@ -1,6 +1,6 @@
 use anchor_lang::prelude::*;
 
-declare_id!("FA51D5fh1VhruC5ZhG2MVvRjfS233QnSD5yEPCbYFd3U");
+declare_id!("HVBFuH43HqGNmPPv22TbcVCDztyBGfg3stgPwuCgruBk");
 
 #[program]
 pub mod solana_ping {
@@ -22,7 +22,7 @@ pub mod solana_ping {
 // tx instructions
 #[derive(Accounts)]
 pub struct Initialize<'info> {
-    #[account(init, payer = user, space = 16 + 16)]
+    #[account(init, payer = user, space = 64 + 64)]
     pub base_account: Account<'info, BaseAccount>,
     #[account(mut)]
     pub user: Signer<'info>,
